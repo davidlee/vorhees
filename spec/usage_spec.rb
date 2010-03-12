@@ -78,7 +78,7 @@ describe Vorhees::Client do
     end
   end
   
-  context 'should receive matcher' do    
+  context 'should receive matcher (running against an echo server)' do    
     it 'sanity check' do
       with_server do
         @client = Client.new(:host => 'localhost', :port => TEST_SERVER_PORT)
