@@ -1,0 +1,24 @@
+http://github.com/davidlee/vorhees
+
+Vorhees is a simple JSON client and accompanying rspec matcher. 
+
+It's designed to aid the authors of simple JSON socket protocols & servers.
+
+It's opinionated, in that it expects you'll use a key (the default is
+'command') to differentiate types of message; it assumes that the commands are
+uppercase; and that you're using rspec -- other than that it should be
+reasonably universal.
+
+As an example, the following will assert that a message was received within 2
+seconds, with the values {"command":"HELLO", "recipient":"world"}. Additional
+values are allowed (i.e., a "body" field wouldn't cause the spec to fail):
+
+@client = Vorhees::Client.new(:host => 'localhost', :port => 1234)
+@client.should receive(:hello, :timeout => 2.0) { |msg| 
+  msg['recipient].should == 'world'
+}
+
+If you're interested, let me know and I'll try to add spec coverage for some
+of the other (currently undocumented) features.
+
+Provided under the MIT License.
