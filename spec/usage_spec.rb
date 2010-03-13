@@ -99,7 +99,7 @@ describe Vorhees::Client do
       with_server do
         @client = Client.new(:host => 'localhost', :port => TEST_SERVER_PORT)
         @client.sends 'HELLO', :delay => 0.2
-        lambda {          
+        lambda {
           @client.should receive(:hello, :timeout => 0.1)
         }.should raise_error(RuntimeError)
       end
@@ -108,10 +108,11 @@ describe Vorhees::Client do
     it 'raises if the wrong command (or custom :key value) is returned' do
       with_server do
         @client = Client.new(:host => 'localhost', :port => TEST_SERVER_PORT)
-        @client.sends 'HELLO', :delay => 0.2        
-        lambda {          
+        @client.sends 'HELLO', :delay => 0.2
+        
+        lambda {
           @client.should receive(:goodbye)
-        }.should raise_error(RuntimeError) # (Spec::Expectations::ExpectationNotMetError)
+        }.should raise_error #(Spec::Expectations::ExpectationNotMetError, RuntimeError)
       end
     end
     

@@ -1,10 +1,5 @@
 require 'socket'
 require 'json'
-if RUBY_VERSION < '1.9'
-  require 'system_timer'
-else
-  SystemTimer = Timeout
-end
 
 unless Object.const_defined?('ActiveSupport')
   class Hash
@@ -26,6 +21,8 @@ end
 module Vorhees
   class Client  
     attr_accessor :socket, :buffer, :sent, :received, :options, :env
+
+    SystemTimer = Timeout if RUBY_VERSION < '1.9'
 
     GOT_NOTHING  = nil
     GOT_DATA     = 1
@@ -121,6 +118,7 @@ module Vorhees
     end
     alias :response :wait_for_response
   
+    # FIXME use wait_for, clean this up
     def discard_responses_until(value, opts={})
       opts = options.merge(opts)
       SystemTimer.timeout(opts[:timeout]) do
@@ -149,7 +147,7 @@ module Vorhees
           Thread.pass
           retry
         end         
-      end    
+      end
       SystemTimer.timeout(opts[:timeout]) do
         until test.call do
           receive_data options
@@ -226,7 +224,8 @@ module Vorhees
           @buffer += data
           GOT_DATA
         end
-        elapsed = (Time.now.to_f - start_time.to_f).round(4)
+        elapsed = (Time.now.to_f - start_time.to_f)
+        elapsed = (elapsed * 10000).round / 10000        
       rescue Errno::EAGAIN, EOFError
         # yield to background thread if there is one
         Thread.pass

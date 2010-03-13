@@ -1,12 +1,12 @@
 module Vorhees
   module Matchers
 
-    def receive_nothing
+    def receive_nothing(options={})
       Spec::Matchers::Matcher.new :receive_nothing do
         match do |client|
           client.clear
           if client.received.empty?
-            client.wait_for_responses
+            client.wait_for_responses options
           end
           client.received.empty?         
         end

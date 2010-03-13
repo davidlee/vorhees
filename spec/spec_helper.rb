@@ -21,7 +21,6 @@ class MockSocket
   def print data
     sent << data
   end
-
   
   def flush
     # noop

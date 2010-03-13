@@ -1,9 +1,13 @@
-require 'spec/rake/spectask'
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
+require 'spec/rake/spectask'
 require 'fileutils'
 require 'cucumber/rake/task'
+
+require '.bundle/environment'
+Bundler.setup()
+
 
 namespace :features do  
   Cucumber::Rake::Task.new(:all) do |t|
