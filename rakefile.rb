@@ -3,19 +3,23 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 require 'fileutils'
-require 'cucumber/rake/task'
+begin
+  require 'cucumber/rake/task'
+rescue LoadError
+  puts "cucumber is not installed."
+end
 
 require '.bundle/environment'
 Bundler.setup()
 
-
-namespace :features do  
-  Cucumber::Rake::Task.new(:all) do |t|
-    t.cucumber_opts = %w{--format pretty --color}
+if defined? Cucumber
+  namespace :features do  
+    Cucumber::Rake::Task.new(:all) do |t|
+      t.cucumber_opts = %w{--format pretty --color}
+    end
   end
+  task :features => 'features:all'
 end
-
-task :features => 'features:all'
 
 namespace :spec do
   desc "Run the code examples in spec/*"
