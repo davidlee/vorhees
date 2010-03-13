@@ -22,7 +22,12 @@ module Vorhees
   class Client  
     attr_accessor :socket, :buffer, :sent, :received, :options, :env
 
-    SystemTimer = Timeout if RUBY_VERSION < '1.9'
+    if RUBY_VERSION < '1.9'
+      require 'system_timer'
+    else
+      SystemTimer = Timeout
+    end
+    
 
     GOT_NOTHING  = nil
     GOT_DATA     = 1
@@ -154,7 +159,8 @@ module Vorhees
         end
       end    
     rescue Timeout::Error
-    ensure 
+    ensure
+      # let the error be thrown one more time, this time it won't be caught
       yield if assertion_failed
     end
   

@@ -82,6 +82,7 @@ class TestServer < EventMachine::Connection
     # 'delay' => sec
     delay = request['delay'].to_f
     if delay > 0
+      # Ha, looks like EM::Timer doesn't allow floats in 1.8.7 ?
       EM::Timer.new(delay) do
         send_data request.to_json + EOF
       end      

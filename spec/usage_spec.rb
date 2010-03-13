@@ -91,14 +91,17 @@ describe Vorhees::Client do
       with_server do
         @client = Client.new(:host => 'localhost', :port => TEST_SERVER_PORT)
         @client.sends 'HELLO', :delay => 0.1
-        @client.should receive(:hello, :timeout => 0.2)
+        @client.should receive(:hello, :timeout => 0.3)
       end
     end
 
     it 'throws an error if it does not receive a message in the timeout' do
       with_server do
+        # sanity test:
+        lambda { SystemTimer.timeout(0.1) { sleep 1 } }.should raise_error 
+        
         @client = Client.new(:host => 'localhost', :port => TEST_SERVER_PORT)
-        @client.sends 'HELLO', :delay => 0.2
+        @client.sends 'HELLO', :delay => 1
         lambda {
           @client.should receive(:hello, :timeout => 0.1)
         }.should raise_error(RuntimeError)
