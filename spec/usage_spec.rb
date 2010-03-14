@@ -55,6 +55,14 @@ describe Vorhees::Client do
 
       end
 
+      context 'given a symbol' do
+        it 'sends the uppercased symbol as the default key' do
+          @client.options[:key].should == 'command'
+          @client.sends :foo
+          @socket.sent.should == [JSON.unparse('command' => 'FOO') + @client.eof]
+        end
+      end
+
       context 'given a string' do
         it 'sends a JSON pair of the default key and the string as the value' do
           @client.options[:key].should == 'command'
